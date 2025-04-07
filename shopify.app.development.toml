@@ -1,0 +1,30 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "20301ff6dfd6438deb5a09f76a57bdfb"
+application_url = "https://customer-auth--development.gadget.app/api/shopify/install-or-render"
+embedded = true
+name = "cust-auth-dev"
+handle = "cust-auth-dev"
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  uri = "https://customer-auth--development.gadget.app/api/webhooks/shopify"
+  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
+
+[auth]
+redirect_urls = [
+  "https://customer-auth--development.gadget.app/api/connections/auth/shopify/callback"
+]
+
+[app_proxy]
+url = "https://customer-auth--development.gadget.app/sign-up"
+subpath = "cust-auth"
+prefix = "apps"
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "born-dev.myshopify.com"

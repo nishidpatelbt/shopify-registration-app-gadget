@@ -1,0 +1,670 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrLsxBC4NzlPgi-WTMjIsGepPY77lsDFE&libraries=places"></script>
+<link href="https://cdn.jsdelivr.net/npm/sf-mono-webfont@1.0.0/stylesheet.min.css" rel="stylesheet" />
+<link href="https://db.onlinewebfonts.com/c/085c27a01464d54e22ea8b2b6cbf29a9?family=Swift+Neue+LT+W01+Book" rel="stylesheet">
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css'><link rel="stylesheet" href="./style.css">
+<script src="https://customer-auth--development.gadget.app/api/client/web.min.js" defer="defer"></script>
+<script src="{{ 'customer-auth.js' |  asset_url }}" defer="defer"></script>
+<script>
+    window.shopId = "{{ shop.id }}";
+</script>
+<div class="container mt-5">
+    <!-- Login Button -->
+    <button id="openModal" class="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg">
+        Login
+    </button>
+
+    <!-- Modal -->
+    <div id="modal" registrationmodal
+        class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 overflow-auto scrollbar-none">
+        <div class="bg-white rounded-lg shadow-lg  w-full relative max-w-[440px] max-h-[800px]">
+            <!-- Close Button -->
+            <div class="flex  items-center mb-4 border-b border border-[#e9ecef]">
+                <button id="back" class="px-4 py-2 rounded mt-2 SF-Mono pt-0 pr-1 pb-1 pl-1 invisible"><svg width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 7L10 12L14 17" stroke="black" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                    </svg></button>
+                <h3 class="pl-0 text-[20px] text-dark font-[400] px-[15px] py-[20px] SF-Mono">Sign in or create an
+                    account</h3>
+                <button id="closeModal" class="absolute top-[26px] right-[14px] cursor-pointer">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 1.00009L1 15.0001M15 15L1 1" stroke="black" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="main_progress-section hidden" style="
+                height: 5px;
+                width: 100%;
+                background: #E5E7EB;
+                position: relative;
+                top: -10px;
+            ">
+                <div class="progress_bar" style="
+                position: absolute;
+                width: 14%;
+                display: flex;
+                background: black;
+                height: 5px;
+                z-index: 1;
+            "></div>
+            </div>
+            <div id="app_login_form" class="px-[20px] py-[20px] hidden">
+            {%- form 'customer_login', novalidate: 'novalidate' -%}
+                <div class="flex justify-between items-center pb-[20px]">
+                    <div class="text-[28px] font-[400] modal-title Swift-Neue text-black">Welcome back!</div>
+                    <div id="create_account_button" class="text-[14px] font-[700] cursor-pointer SF-Mono">Create account &nbsp;→</div>
+                </div>
+                <p class="font-[400] mb-[20px] text-[14px] text-[#9D9D9D] SF-Mono">Continue with</p>
+                <div class="flex justify-between gap-4 mb-[20px]">
+                    <button
+                        class="bg-[#1D71F2] py-[5px] flex justify-center items-center gap-4 w-full cursor-pointer text-[#FFFFFF] text-[14px] font-[400] SF-Mono">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M29.3333 16.0003C29.3333 8.64033 23.36 2.66699 16 2.66699C8.63996 2.66699 2.66663 8.64033 2.66663 16.0003C2.66663 22.4537 7.25329 27.827 13.3333 29.067V20.0003H10.6666V16.0003H13.3333V12.667C13.3333 10.0937 15.4266 8.00033 18 8.00033H21.3333V12.0003H18.6666C17.9333 12.0003 17.3333 12.6003 17.3333 13.3337V16.0003H21.3333V20.0003H17.3333V29.267C24.0666 28.6003 29.3333 22.9203 29.3333 16.0003Z"
+                                fill="white"></path>
+                        </svg> Facebook
+                    </button>
+                    <button
+                        class="bg-[white] py-[5px] border-[#E5E7EB] border flex justify-center items-center gap-4 w-full cursor-pointer text-[black] text-[14px] font-[400] SF-Mono">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M29.074 13.389H28V13.3337H16V18.667H23.5354C22.436 21.7717 19.482 24.0003 16 24.0003C11.582 24.0003 8.00002 20.4183 8.00002 16.0003C8.00002 11.5823 11.582 8.00033 16 8.00033C18.0394 8.00033 19.8947 8.76966 21.3074 10.0263L25.0787 6.25499C22.6974 4.03566 19.512 2.66699 16 2.66699C8.63669 2.66699 2.66669 8.63699 2.66669 16.0003C2.66669 23.3637 8.63669 29.3337 16 29.3337C23.3634 29.3337 29.3334 23.3637 29.3334 16.0003C29.3334 15.1063 29.2414 14.2337 29.074 13.389Z"
+                                fill="#FFC107"></path>
+                            <path
+                                d="M4.20398 9.79433L8.58465 13.007C9.76998 10.0723 12.6406 8.00033 16 8.00033C18.0393 8.00033 19.8946 8.76966 21.3073 10.0263L25.0786 6.25499C22.6973 4.03566 19.512 2.66699 16 2.66699C10.8786 2.66699 6.43731 5.55833 4.20398 9.79433Z"
+                                fill="#FF3D00"></path>
+                            <path
+                                d="M16 29.3338C19.444 29.3338 22.5733 28.0158 24.9393 25.8725L20.8127 22.3805C19.429 23.4327 17.7383 24.0018 16 24.0005C12.532 24.0005 9.58734 21.7891 8.478 18.7031L4.13 22.0531C6.33667 26.3711 10.818 29.3338 16 29.3338Z"
+                                fill="#4CAF50"></path>
+                            <path
+                                d="M29.074 13.3883H28V13.333H16V18.6663H23.5353C23.0095 20.144 22.0622 21.4351 20.8107 22.3803L20.8127 22.379L24.9393 25.871C24.6473 26.1363 29.3333 22.6663 29.3333 15.9997C29.3333 15.1057 29.2413 14.233 29.074 13.3883Z"
+                                fill="#1976D2"></path>
+                        </svg>
+                        Google
+                    </button>
+                    <button
+                        class="bg-[black] py-[5px] border-[#E5E7EB] border flex justify-center items-center gap-4 w-full cursor-pointer text-[black] text-[14px] font-[400] SF-Mono">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7333 27.04C21.4267 28.3067 20 28.1067 18.6267 27.5067C17.1733 26.8933 15.84 26.8667 14.3067 27.5067C12.3867 28.3333 11.3733 28.0933 10.2267 27.04C3.72002 20.3333 4.68002 10.12 12.0667 9.74667C13.8667 9.84 15.12 10.7333 16.1733 10.8133C17.7467 10.4933 19.2533 9.57333 20.9333 9.69333C22.9467 9.85333 24.4667 10.6533 25.4667 12.0933C21.3067 14.5867 22.2933 20.0667 26.1067 21.6C25.3467 23.6 24.36 25.5867 22.72 27.0533L22.7333 27.04ZM16.04 9.66667C15.84 6.69333 18.2533 4.24 21.0267 4C21.4134 7.44 17.9067 10 16.04 9.66667Z" fill="white"></path></svg>
+                    </button>
+                </div>
+                {%- if form.errors -%}
+                  <h2 class="form__message" tabindex="-1" autofocus>
+                    <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
+                    <svg aria-hidden="true" focusable="false" viewBox="0 0 13 13">
+                      <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                      <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                      <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                      <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                    </svg>
+                    {{ 'templates.contact.form.error_heading' | t }}
+                  </h2>
+                  {{ form.errors | default_errors }}
+                {%- endif -%}
+                <div class="flex items-center gap-4 mb-[20px]">
+                    <span class="mx-auto inline-block h-[1px] w-full bg-[#E5E7EB]"></span>
+                    <span class="text-[14px] font-[400] SF-Mono">or</span>
+                    <span class="mx-auto inline-block h-[1px] w-full bg-[#E5E7EB]"></span>
+                </div>
+                <div class="flex flex-col gap-4 pb-[20px]">
+                    <div class="w-full">
+                        <input type="email" id="CustomerEmail" placeholder="Email address" name="customer[email]"
+                            autocomplete="email"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            {% if form.errors contains 'form' %}
+                                aria-invalid="true"
+                            {% endif %}
+                            class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono">
+                    </div>
+                    <div class="w-full">
+                        <input type="password" id="CustomerPassword" placeholder="Email address" name="customer[password]"
+                            autocomplete="current-password"
+                            {% if form.errors contains 'form' %}
+                            aria-invalid="true"
+                            {% endif %}
+                            class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono">
+                    </div>
+                    <div class="sm:flex justify-between">
+                        <div class="flex sm:mb-0 mb-3 items-center gap-3">
+                            <input class="relative !w-[20px] h-[20px]" type="checkbox">
+                            <div class="text-[14px] font-[400] SF-Mono">Remember me</div>
+                        </div>
+                        <div class="text-[14px] font-[700] hover:cursor-pointer hover:underline SF-Mono">Forgotten your password?</div>
+                    </div>
+                </div>
+                <button class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Sign in</button>
+              {%- endform -%}
+            </div>
+            <form method="post" id="customerForm">
+                <input type="hidden" name="shop" value="{{ shop.id }}" />
+            <!-- Step 1 -->
+            <div id="step1" class="step px-[20px] py-[20px]">
+                <div class="flex justify-between items-center pb-[20px]">
+                    <div class="text-[28px] font-[400] modal-title Swift-Neue text-black">Create account</div>
+                    <div id="sign_in_button" class="text-[14px] font-[700] cursor-pointer SF-Mono">Sign in &nbsp;→</div>
+                </div>
+                <p class="font-[400] mb-[20px] text-[14px] text-[#9D9D9D] SF-Mono">Continue with</p>
+                <div class="flex justify-between gap-4 mb-[20px]">
+                    <button
+                        class="bg-[#1D71F2] py-[5px] flex justify-center items-center gap-4 w-full cursor-pointer text-[#FFFFFF] text-[14px] font-[400] SF-Mono">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M29.3333 16.0003C29.3333 8.64033 23.36 2.66699 16 2.66699C8.63996 2.66699 2.66663 8.64033 2.66663 16.0003C2.66663 22.4537 7.25329 27.827 13.3333 29.067V20.0003H10.6666V16.0003H13.3333V12.667C13.3333 10.0937 15.4266 8.00033 18 8.00033H21.3333V12.0003H18.6666C17.9333 12.0003 17.3333 12.6003 17.3333 13.3337V16.0003H21.3333V20.0003H17.3333V29.267C24.0666 28.6003 29.3333 22.9203 29.3333 16.0003Z"
+                                fill="white"></path>
+                        </svg> Facebook
+                    </button>
+                    <button
+                        class="bg-[white] py-[5px] border-[#E5E7EB] border flex justify-center items-center gap-4 w-full cursor-pointer text-[black] text-[14px] font-[400] SF-Mono">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M29.074 13.389H28V13.3337H16V18.667H23.5354C22.436 21.7717 19.482 24.0003 16 24.0003C11.582 24.0003 8.00002 20.4183 8.00002 16.0003C8.00002 11.5823 11.582 8.00033 16 8.00033C18.0394 8.00033 19.8947 8.76966 21.3074 10.0263L25.0787 6.25499C22.6974 4.03566 19.512 2.66699 16 2.66699C8.63669 2.66699 2.66669 8.63699 2.66669 16.0003C2.66669 23.3637 8.63669 29.3337 16 29.3337C23.3634 29.3337 29.3334 23.3637 29.3334 16.0003C29.3334 15.1063 29.2414 14.2337 29.074 13.389Z"
+                                fill="#FFC107"></path>
+                            <path
+                                d="M4.20398 9.79433L8.58465 13.007C9.76998 10.0723 12.6406 8.00033 16 8.00033C18.0393 8.00033 19.8946 8.76966 21.3073 10.0263L25.0786 6.25499C22.6973 4.03566 19.512 2.66699 16 2.66699C10.8786 2.66699 6.43731 5.55833 4.20398 9.79433Z"
+                                fill="#FF3D00"></path>
+                            <path
+                                d="M16 29.3338C19.444 29.3338 22.5733 28.0158 24.9393 25.8725L20.8127 22.3805C19.429 23.4327 17.7383 24.0018 16 24.0005C12.532 24.0005 9.58734 21.7891 8.478 18.7031L4.13 22.0531C6.33667 26.3711 10.818 29.3338 16 29.3338Z"
+                                fill="#4CAF50"></path>
+                            <path
+                                d="M29.074 13.3883H28V13.333H16V18.6663H23.5353C23.0095 20.144 22.0622 21.4351 20.8107 22.3803L20.8127 22.379L24.9393 25.871C24.6473 26.1363 29.3333 22.6663 29.3333 15.9997C29.3333 15.1057 29.2413 14.233 29.074 13.3883Z"
+                                fill="#1976D2"></path>
+                        </svg>
+                        Google
+                    </button>
+                </div>
+
+
+                <div class="flex items-center gap-4 mb-[20px]"><span
+                        class="mx-auto inline-block h-[1px] w-full bg-[#E5E7EB]"></span><span
+                        class="text-[14px] font-[400]">or</span><span
+                        class="mx-auto inline-block h-[1px] w-full bg-[#E5E7EB]"></span></div>
+
+
+                <div class="flex flex-col gap-4 pb-[20px]">
+                    <div class="flex gap-4">
+                        <div>
+                            <input type="text" id="firstName" placeholder="First name" name="firstName"
+                                class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono">
+                            <span id="firstNameError" class="text-red-500 text-[1rem] hidden SF-Mono">First name is
+                                required</span>
+                        </div>
+
+                        <div>
+                            <input type="text" id="lastName" placeholder="Last name" name="lastName"
+                                class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono">
+                            <span id="lastNameError" class="text-red-500 text-[1rem] hidden SF-Mono">Last name is
+                                required</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <input type="email" id="email" placeholder="Email address" name="email"
+                            class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono">
+                        <span id="emailError" class="text-red-500 text-[1rem] hidden SF-Mono">Enter a valid email</span>
+                    </div>
+
+
+                    <div class="w-full"><input type="password" id="password" placeholder="Enter Password" name="password"
+                            class="py-[10px] text-[14px] w-full border px-[10px]">
+                        <span id="passwordError" class="text-red-500 text-[1rem] hidden SF-Mono">Password is required</span>
+                    </div>
+
+                    <span class="text-[12px] font-[400] text-[#9D9D9D] px-[10px] SF-Mono">At least 8 characters, one
+                        capital letter, one lower case letter, one number and one special character</span>
+
+                    <div class="text-[12px] font-[400] text-[#9D9D9D] SF-Mono">By creating an account, you agree to our
+                        <span class="text-[black] tecxt-bold font-[700] hover:underline cursor-pointer">Terms of
+                            Use</span> and acknowledge our <span
+                            class="text-[black] tecxt-bold font-[700] hover:underline cursor-pointer">Privacy
+                            Policy</span>. Depending on how you use Collected Club, we may send you promotional emails.
+                        See our Privacy Policy for more info or to opt-out.</div>
+
+                </div>
+
+                <button id="next1"
+                    class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Agree
+                    and continue</button>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="step2" class="step hidden px-[20px] py-[20px] bg-white">
+                <div>
+                    <div class="text-[14px] font-[400] SF-Mono">Step 1 of 6</div>
+                    <div class="text-[28px] font-[400] modal-title py-[20px] Swift-Neue text-black">Tell us your address</div>
+                </div>
+
+                <div class="font-[400] mb-[20px] text-[12px] text-[#9D9D9D] SF-Mono">If you buy on Collected Club, this
+                    is where your objects will be sent. If you sell, this helps us verify your identity.</div>
+
+                <div class="flex flex-col gap-4 pb-[20px]">
+                    <div class="w-full">
+                        <div class="ReactFlagsSelect-module_flagsSelect">
+                            <button
+                                class="cursor-pointer w-full flex justify-between items-center px-2 py-1 font-inherit text-[#4d4d4d] border border-[rgba(77,77,77,0.3)] rounded bg-transparent leading-[2] rounded-[5px] py-1 px-[19px]">
+                                <span class="text-[16px] SF-Mono">Country</span>
+                            </button>
+                            <input type="hidden" name="country" id="country" value="" />
+                            <ul class="ReactFlagsSelect-module_selectOptions border border-[#bdbbbb] rounded-[3px] bg-white mt-2 px-2 py-2 max-h-[180px] overflow-auto
+h-[180px] hidden">
+                                {{ country_option_tags
+                                | replace: '<option', '<li class="cursor-pointer"><span class="SF-Mono"' |
+                                    replace: '</option>' , '</span></li>' }} </ul>
+                        </div>
+                        <div class="font-[400] text-[12px] text-[#9D9D9D] px-[10px] pt-1 SF-Mono">Currently, we only
+                            support countries shown here.</div>
+                    </div>
+
+                    <div class="w-full">
+                        <input id="street" placeholder="Street"
+                            class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono" type="text" name="Street">
+                        <span id="streetError" class="text-red-500 text-[1rem] hidden SF-Mono">Street is required</span>
+                        <ul id="suggestions"></ul>
+                    </div>
+
+                    <div class="w-full">
+                        <input id="houseNumber" placeholder="House number"
+                            class="py-[10px] w-full text-[14px] border px-[10px] SF-Mono" type="text" name="House">
+                        <span id="houseNumberError" class="text-red-500 text-[1rem] hidden SF-Mono">House number is
+                            required</span>
+                    </div>
+
+                    <div class="w-full">
+                        <input id="apartment" placeholder="Apartment / suite / floor (optional)"
+                            class="py-[10px] w-full text-[14px] border px-[10px] SF-Mono" type="text" name="Apartment">
+                        <span id="apartmentError" class="text-red-500 text-[1rem] hidden SF-Mono">Apartment details should
+                            not be empty if provided</span>
+                    </div>
+
+                    <span class="text-[12px] font-[400] text-[#9D9D9D] px-[10px] SF-Mono">You can also add delivery
+                        instructions here</span>
+
+                    <div class="flex gap-4">
+                        <div class="w-full">
+                            <input id="postalCode" placeholder="Postal code"
+                                class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono" type="text"
+                                name="postalCode">
+                            <span id="postalCodeError" class="text-red-500 text-[1rem] hidden SF-Mono">Please enter a valid
+                                postal code</span>
+                        </div>
+                        <div class="w-full">
+                            <input id="townCity" placeholder="Town / City"
+                                class="py-[10px] text-[14px] w-full border px-[10px] SF-Mono" type="text"
+                                name="townCity">
+                            <span id="townCityError" class="text-red-500 text-[1rem] hidden SF-Mono">Town / City is
+                                required</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <div class="text-[12px] font-[400] text-[#9D9D9D] mb-1">Date of birth</div>
+                        <input id="birthday" placeholder="Birthday"
+                            class="py-[10px] w-full text-[14px] border px-[10px] SF-Mono" type="date" name="birthday">
+                        <span id="birthdayError" class="text-red-500 text-[1rem] hidden SF-Mono">Please select a valid
+                            birthday</span>
+                    </div>
+                </div>
+
+                <button id="next2"
+                    class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Next</button>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="step3" class="step hidden">
+                <div class="px-[20px] py-[20px]">
+                    <div>
+                        <div class="text-[14px] font-[400] SF-Mono">Step 2 of 6</div>
+                        <div class="text-[28px] font-[400] modal-title py-[20px] Swift-Neue text-black">Tell us your phone number
+                        </div>
+                    </div>
+
+                    <div class="font-[400] mb-[20px] text-[12px] text-[#9D9D9D] SF-Mono">To verify yourr identity, we’ll
+                        send you a code to make sure it’s you. We won’t send marketing messages to your phone.</div>
+
+                    <div class="flex flex-col gap-4">
+                        <div class="w-full">
+                            <div class="py-[10px] w-full text-[16px] border border-[#E5E7EB] px-[10px] PhoneInput">
+                                <input id="mobile_code" placeholder="Phone number"
+                                    class="SF-Mono py-[10px] text-[14px] w-full px-[10px] SF-Mono" type="text"
+                                    name="phoneNumber">
+                            </div>
+                            <span id="phoneNumberError" class="text-red-500 text-[1rem] hidden SF-Mono">Please enter a
+                                    valid phone number</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap">
+                    <div class="w-full px-[20px] pb-[20px]">
+                        <button id="next3"
+                            class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Continue</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Step 4 -->
+            <div id="step4" class="step hidden">
+                <div class="px-[20px] py-[20px]">
+                    <div>
+                        <div class="text-[14px] font-[400] SF-Mono">Step 3 of 6</div>
+                        <div class="text-[28px] font-[400] modal-title py-[10px] Swift-Neue text-black">Enter the code we sent to
+                        </div>
+                        <div class="text-[24px] font-[400] text-[#9D9D9D] SF-Mono phone_number_wrote">+33 7 57 05 46 03
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <div class="w-full">
+                            <div id="otp-form" class="flex gap-2">
+                                <input id="pin1"
+                                    class="shadow-xs flex w-[25%] items-center justify-center border border-stroke bg-white p-2 text-center text-[30px] font-medium text-gray-5 outline-none  SF-Mono"
+                                    type="text" name="pin1">
+
+                                <input id="pin2"
+                                    class="shadow-xs flex w-[25%] items-center justify-center border border-stroke bg-white p-2 text-center text-[30px] font-medium text-gray-5 outline-none  SF-Mono"
+                                    type="text" name="pin2">
+
+                                <input id="pin3"
+                                    class="shadow-xs flex w-[25%] items-center justify-center border border-stroke bg-white p-2 text-center text-[30px] font-medium text-gray-5 outline-none  SF-Mono"
+                                    type="text" name="pin3">
+
+                                <input id="pin4"
+                                    class="shadow-xs flex w-[25%] items-center justify-center border border-stroke bg-white p-2 text-center text-[30px] font-medium text-gray-5 outline-none  SF-Mono"
+                                    type="text" name="pin4">
+                            </div>
+                            <span id="otpError" class="text-red-500 text-[1rem] hidden SF-Mono">Please enter all OTP
+                                digits</span>
+                            <div class="font-[400] my-[10px] text-[12px] text-[#9D9D9D]">Resend code (25s)</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% comment %} <button id="back2" class="bg-gray-300 px-4 py-2 rounded mt-2">Back</button> {% endcomment %}
+                <div class="flex flex-wrap">
+                    <div class="w-full px-[20px] pb-[20px]">
+                        <button id="next4"
+                            class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div id="step5" class="step hidden">
+                <div class="px-[20px] py-[20px]">
+                    <div>
+                        <div class="text-[14px] font-[400] SF-Mono">Step 4 of 6</div>
+                        <div class="text-[28px] font-[400] modal-title py-[10px] Swift-Neue text-black">Questions 1</div>
+                    </div>
+                    <div>
+                        <div class="text-[16px] SF-Mono">Have you ever collected contemporary art?</div>
+                        <div class="font-normal my-2.5 art-bought-type">
+                            <div class="flex gap-3 items-center text-[14px]">
+                                <input id="artYes" class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="artYes" type="radio" value="Yes, I have bought contemporary art" name="artPurchase">
+                                <label class="SF-Mono" for="artYes">Yes, I have bought contemporary art</label>
+                            </div>
+                            <div class="flex gap-3 items-center mt-2.5 text-[14px]">
+                                <input id="artNo" class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="artNo" type="radio" value="No, I have never bought contemporary art
+                                    before" name="artPurchase">
+                                <label class="SF-Mono" for="artNo">No, I have never bought contemporary art
+                                    before</label>
+                            </div>
+                            <span id="artError" class="text-red-500 text-[1rem] hidden SF-Mono">Please select an
+                                option.</span>
+                        </div>
+                    </div>
+                    <div id="artworksNumberSection" class="hidden">
+                        <div class="text-[16px] SF-Mono mt-6">How many artworks do you own?</div>
+                        <div class="font-normal my-2.5">
+                            <div class="flex gap-3 items-center text-[14px] mt-2.5">
+                                <input id="artNumber1"
+                                    class="relative max-w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]" type="radio"
+                                    value="1 - 10" name="artworksNumber">
+                                <label class="SF-Mono" for="artNumber1">1 - 10</label>
+                            </div>
+                            <div class="flex gap-3 items-center mt-2.5 text-[14px]">
+                                <input id="artNumber2"
+                                    class="relative max-w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]" type="radio"
+                                    value="10 - 50" name="artworksNumber">
+                                <label class="SF-Mono" for="artNumber2">10 - 50</label>
+                            </div>
+                            <div class="flex gap-3 items-center mt-2.5 text-[14px]">
+                                <input id="artNumber3"
+                                    class="relative max-w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]" type="radio"
+                                    value="50 - 100" name="artworksNumber">
+                                <label class="SF-Mono" for="artNumber3">50 - 100</label>
+                            </div>
+                            <div class="flex gap-3 items-center mt-2.5 text-[14px]">
+                                <input id="artNumber4"
+                                    class="relative max-w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]" type="radio"
+                                    value="&gt; 100" name="artworksNumber">
+                                <label class="SF-Mono" for="artNumber4">&gt; 100</label>
+                            </div>
+                            <span id="artNumberError" class="text-red-500 text-[1rem] hidden SF-Mono">Please select an
+                                option.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap">
+                    <div class="w-full px-[20px] pb-[20px]">
+                        <button id="next5"
+                            class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div id="step6" class="step hidden">
+                <div class="px-[20px] py-[20px]">
+                    <div>
+                        <div class="text-[14px] font-[400] SF-Mono">Step 5 of 6</div>
+                        <div class="text-[28px] font-[400] modal-title py-[10px] Swift-Neue text-black">Questions 2</div>
+                    </div>
+                    <div>
+                        <div class="text-[16px] SF-Mono">What is your primary interest in the art market?</div>
+                        <div class="font-normal my-2.5">
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="interest1" type="radio" value="Investing in art" name="interest">
+                                <label class="SF-Mono" for="interest1">Investing in art</label>
+                            </div>
+                            <div class="flex gap-3 items-center mt-4 text-[14px]">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="interest2" type="radio" value="Collecting art for personal enjoyment" name="interest">
+                                <label class="SF-Mono" for="interest2">Collecting art for personal enjoyment</label>
+                            </div>
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="interest3" type="radio" value="Professional (e.g., gallery owner, curator,
+                                    advisor)" name="interest">
+                                <label class="SF-Mono" for="interest3">Professional (e.g., gallery owner, curator,
+                                    advisor)</label>
+                            </div>
+                            <div class="flex gap-3 items-center mt-4 text-[14px]">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="interest4" type="radio" value="Artist" name="interest">
+                                <label class="SF-Mono" for="interest4">Artist</label>
+                            </div>
+                            <div class="flex gap-3 items-center mt-4 text-[14px]">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="interest5" type="radio" value="General interest in art" name="interest">
+                                <label class="SF-Mono" for="interest5">General interest in art</label>
+                            </div>
+                            <span id="interestError" class="text-red-500 text-[1rem] hidden SF-Mono">Please select an
+                                option.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap">
+                    <div class="w-full px-[20px] pb-[20px]">
+                        <button id="next6"
+                            class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div id="step7" class="step hidden">
+                <div class="px-[20px] py-[20px]">
+                    <div>
+                        <div class="text-[14px] font-[400] SF-Mono">Step 6 of 6</div>
+                        <div class="text-[28px] font-[400] modal-title py-[10px] Swift-Neue text-black">Questions 3</div>
+                    </div>
+                    <div>
+                        <div class="text-[16px] SF-Mono">What price range would you consider for a single artwork?</div>
+                        <div class="font-normal my-2.5">
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="rangeValue1" type="radio" value="< $5.000" name="rangeValue">
+                                <label class="SF-Mono" for="rangeValue1">
+                                    < $5.000</label>
+                            </div>
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="rangeValue2" type="radio" value="< $10.000" name="rangeValue">
+                                <label class="SF-Mono" for="rangeValue2">
+                                    < $10.000</label>
+                            </div>
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="rangeValue3" type="radio" value="< $20.000" name="rangeValue">
+                                <label class="SF-Mono" for="rangeValue3">
+                                    < $20.000</label>
+                            </div>
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="rangeValue4" type="radio" value="< $50.000" name="rangeValue">
+                                <label class="SF-Mono" for="rangeValue4">
+                                    < $50.000</label>
+                            </div>
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="rangeValue5" type="radio" value="< $100.000" name="rangeValue">
+                                <label class="SF-Mono" for="rangeValue5">
+                                    < $100.000</label>
+                            </div>
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="rangeValue6" type="radio" value="< $500.000" name="rangeValue">
+                                <label class="SF-Mono" for="rangeValue6">
+                                    < $500.000</label>
+                            </div>
+                            <div class="flex gap-3 items-center text-[14px] mt-4">
+                                <input class="relative max=w-[20px] max-h-[20px] min-w-[20px] min-h-[20px]"
+                                    id="rangeValue7" type="radio" value="< $1.000.000" name="rangeValue">
+                                <label class="SF-Mono" for="rangeValue7">
+                                    < $1.000.000</label>
+                            </div>
+                            <span id="rangeError" class="text-red-500 text-[1rem] hidden SF-Mono">Please select an
+                                option.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap">
+                    <div class="w-full px-[20px] pb-[20px]">
+                        <button id="next7"
+                            class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8 -->
+            <div id="step8" class="step hidden">
+                <div class="px-[20px] py-[20px]">
+                    <div>
+                        <div class="border border-[#5C9E31] p-[15px]">
+                            <div class="flex gap-4 items-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="min-w-[30px]"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M17 3.33782C15.5291 2.48697 13.8214 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 10.7687 21.7775 9.58934 21.3704 8.5M7 10L10.5264 12.8211C11.3537 13.483 12.5536 13.3848 13.2624 12.5973L21 4"
+                                        stroke="#5C9E31" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                                <div class="text-[14px] font-[400] SF-Mono">Thanks! Your account has been created
+                                    successfully.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-[28px] font-[400] modal-title py-[20px] SF-Mono">Thanks, you’re done!</div>
+                    <div class="font-[400] mb-[10px] text-[14px] SF-Mono">You’re now ready to start exploring Collected
+                        Club, enjoy!</div>
+                </div>
+                <div class="flex flex-wrap">
+                    <div class="w-full px-[20px] pb-[20px]">
+                        <button id="submitBtn"
+                            class="block w-full bg-[black] p-[15px] text-center text-[14px] font-[400] text-white transition hover:bg-[#555] SF-Mono">Let’s
+                            go</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js'></script><script  src="./script.js"></script>
+  
+<script src="https://cdn.jsdelivr.net/gh/linuxguist/countries@main/script.js"></script>
+<style>
+    .Swift-Neue{
+        font-family: "Swift Neue LT W01 Book";
+    }
+    .SF-Mono {
+        font-family: 'SF Mono';
+    }
+
+    .ReactFlagsSelect-module_flagsSelect {
+        position: relative;
+    }
+
+    ul.ReactFlagsSelect-module_selectOptions {
+        position: absolute;
+        width: 100%;
+    }
+
+    .PhoneInput {
+        display: flex;
+        align-items: center;
+    }
+
+    #suggestions {
+        list-style: none;
+        padding: 20px;
+        border: 1px solid #ccc;
+        max-width: 91%;
+        max-height: 300px;
+        overflow-y: scroll;
+        position: absolute;
+        background: white;
+    }
+
+    #suggestions li {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    #suggestions li:hover {
+        background: #f0f0f0;
+    }
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+    ul.ReactFlagsSelect-module_selectOptions li:first-child {
+        display: none;
+    }
+    ul.ReactFlagsSelect-module_selectOptions li {
+        padding: 4px 10px;
+        margin: 4px 0;
+    }
+</style>
+
+{% schema %}
+{
+"name": "Customer Form",
+"target": "section",
+"settings": []
+}
+{% endschema %}
